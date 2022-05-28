@@ -4,7 +4,7 @@
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const { initializeApp } = require("firebase/app")
-const { getFirestore, collection, getDocs, updateDoc } = require('firebase/firestore/lite');
+const { getFirestore, collection, getDocs, updateDoc, doc, deleteDoc, addDoc } = require('firebase/firestore');
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCceOzx2G0shvbBhyUkw6k2aHMlP1BbiXg",
@@ -54,12 +54,29 @@ class ReservationsService {
         }
     }
 
-    async updateData() {
+    async createData(body) {
         try {
-            const reservations = collection(db, "reservaciones")
-            const response = await updateDoc(reservations, {})
-            const data = response.docs.map(doc => doc.data());
-            return data;
+            const newReservation = collection(db, "reservaciones")
+            await addDoc(newReservation, body)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async updateData(id, body) {
+        try {
+            console.log(body)
+            const reservations = doc(db, "reservaciones", id)
+            await updateDoc(reservations, body)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deleteData(id) {
+        try {
+            const reservation = doc(db, "reservaciones", id)
+            await deleteDoc(reservation)
         } catch (error) {
             throw error
         }

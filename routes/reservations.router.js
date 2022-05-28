@@ -27,25 +27,34 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
     let body = req.body
-    body = Object.values(body)
-    // const data = JSON.parse(body)
-    const reservationsArray = [...body]
+    console.log(body)
+    await reservationsServ.createData(body)
     res.status(201).json(
         {
-            body: reservationsArray
+            message: "Create Successfully"
         }
     )
+
 })
 
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res) => {
     const { id } = req.params
-    const { body } = req.body
-    reservationsArray.forEach(reservation => {
-        if (reservation.id == id) {
+    const body = req.body
+    console.log(id)
+    console.log(body)
+    await reservationsServ.updateData(id, body)
+    res.status(201).json({
+        message: "Update successfully"
+    })
+})
 
-        }
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params
+    await reservationsServ.deleteData(id)
+    res.status(200).json({
+        message: "Delete Successfull"
     })
 })
 
